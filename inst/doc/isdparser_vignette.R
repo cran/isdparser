@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 #  install.packages("isdparser")
 
 ## ----eval=FALSE----------------------------------------------------------
-#  devtools::install_github(c("ropenscilabs/isdparser"))
+#  devtools::install_github(c("ropensci/isdparser"))
 
 ## ------------------------------------------------------------------------
 library("isdparser")
@@ -24,6 +24,9 @@ isd_parse_line(lns[1])
 head(
   isd_parse_line(lns[1], as_data_frame = FALSE)
 )
+
+## ------------------------------------------------------------------------
+isd_parse_line(lns[1], additional = FALSE)
 
 ## ------------------------------------------------------------------------
 isd_parse(path)
@@ -59,4 +62,7 @@ isd_parse(path)
 #  #> #   AW1_quality_automated_atmospheric_condition_code <chr>, N03_original_observation <chr>,
 #  #> #   N03_original_value_text <chr>, N03_units_code <chr>, N03_parameter_code <chr>, REM_remarks <chr>,
 #  #> #   REM_identifier <chr>, REM_length_quantity <chr>, REM_comment <chr>
+
+## ------------------------------------------------------------------------
+isd_parse(path, additional = FALSE)
 
