@@ -55,6 +55,8 @@
 #' a 0 entered in the thousandth position.
 #'
 #' @name isdparser-package
+#' @importFrom lubridate ymd_hms
+#' @import data.table
 #' @aliases isdparser
 #' @docType package
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
@@ -65,9 +67,9 @@ NULL
 #'
 #' This data.frame includes metadata describing all the data provided in ISD
 #' data files. And is used for transforming and scaling variables.
-#' 
-#' Original csv data is in inst/extdata/isd_metadata.csv, collected from 
-#' 
+#'
+#' Original csv data is in inst/extdata/isd_metadata.csv, collected from
+#'
 #'
 #' The data.frame has the following columns:
 #'
@@ -102,7 +104,7 @@ NULL
 #'  one of 9, 99, 999, 9999, 99999, 999999, or NA
 #'  \item description - (chr) short description of variable
 #'  \item dom - (chr) long description of variable with categories
-#'  \item dom_parsed_json - (list) NA if no categries, or a named list with
+#'  \item dom_parsed_json - (list) NA if no categories, or a named list with
 #'  category labels and their values
 #' }
 #'

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Scott Chamberlain" />
 
-<meta name="date" content="2018-10-23" />
+<meta name="date" content="2020-01-31" />
 
 <title>Introduction to the isdparser package</title>
 
@@ -69,8 +69,6 @@ overflow: auto;
 margin-left: 2%;
 position: fixed;
 border: 1px solid #ccc;
-webkit-border-radius: 6px;
-moz-border-radius: 6px;
 border-radius: 6px;
 }
 
@@ -98,9 +96,14 @@ font-size: 12px;
 .tocify-subheader .tocify-subheader {
 text-indent: 30px;
 }
-
 .tocify-subheader .tocify-subheader .tocify-subheader {
 text-indent: 40px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 50px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 60px;
 }
 
 .tocify .tocify-item > a, .tocify .nav-list .nav-header {
@@ -504,13 +507,13 @@ float: none;
 
           item.append($("<a/>", {
 
-            "text": self.text()
+            "html": self.html()
 
           }));
 
         } else {
 
-          item.text(self.text());
+          item.html(self.html());
 
         }
 
@@ -1327,9 +1330,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -1343,7 +1344,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1354,50 +1354,73 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -1411,6 +1434,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -1446,8 +1475,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -1456,6 +1483,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -1474,14 +1511,12 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introduction to the isdparser package</h1>
-<h4 class="author"><em>Scott Chamberlain</em></h4>
-<h4 class="date"><em>2018-10-23</em></h4>
+<h4 class="author">Scott Chamberlain</h4>
+<h4 class="date">2020-01-31</h4>
 
 </div>
 
 
-<div id="isdparser-introduction" class="section level1">
-<h1>isdparser introduction</h1>
 <p><code>isdparser</code> is an parser for ISD/ISD NOAA files</p>
 <p>Code liberated from <code>rnoaa</code> to focus on ISD parsing since it’s sorta complicated. Has minimal dependencies, so you can parse your ISD/ISH files without needing the deps that <code>rnoaa</code> needs. Will be used by <code>rnoaa</code> once on CRAN.</p>
 <p>Documentation at <a href="ftp://ftp.ncdc.noaa.gov/pub/data/noaa/ish-format-document.pdf" class="uri">ftp://ftp.ncdc.noaa.gov/pub/data/noaa/ish-format-document.pdf</a></p>
@@ -1490,28 +1525,122 @@ div.tocify {
 <li><code>isd_parse()</code> - parse all lines in a file, with parallel option</li>
 <li><code>isd_parse_line()</code> - parse a single line - you choose which lines to parse and how to apply the function to your lines</li>
 <li><code>isd_transform()</code> - transform ISD data variables</li>
+<li><code>isd_parse_csv()</code> - parse csv format files</li>
 </ul>
+<p><code>isd_parse_csv()</code> parses NOAA ISD csv files, whereas <code>isd_parse()</code> and <code>isd_parse_line()</code> both handle compressed files where each row of data is a string that needs to be parsed.</p>
+<p><code>isd_parse_csv()</code> is faster than <code>isd_parse()</code> because parsing each line takes some time - although using <code>isd_parse(parallel = TRUE)</code> option gets closer to the speed of <code>isd_parse_csv()</code>.</p>
 <div id="install" class="section level2">
 <h2>Install</h2>
 <p>Stable from CRAN</p>
 <pre class="r"><code>install.packages(&quot;isdparser&quot;)</code></pre>
 <p>Dev version</p>
-<pre class="r"><code>devtools::install_github(c(&quot;ropensci/isdparser&quot;))</code></pre>
+<pre class="r"><code>remotes::install_github(&quot;ropensci/isdparser&quot;)</code></pre>
 <pre class="r"><code>library(&quot;isdparser&quot;)</code></pre>
 </div>
-<div id="parse-lines-from-an-isd-file" class="section level2">
-<h2>Parse lines from an ISD file</h2>
+<div id="isd_parse_csv-parse-a-csv-file" class="section level2">
+<h2>isd_parse_csv: parse a CSV file</h2>
+<p>Using a csv file included in the package:</p>
+<pre class="r"><code>path &lt;- system.file(&#39;extdata/00702699999.csv&#39;, package = &quot;isdparser&quot;)
+isd_parse_csv(path)
+#&gt; # A tibble: 6,843 x 68
+#&gt;    station date                source latitude longitude elevation name 
+#&gt;      &lt;int&gt; &lt;dttm&gt;               &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;
+#&gt;  1  7.03e8 2017-02-10 14:04:00      4        0         0      7026 WXPO…
+#&gt;  2  7.03e8 2017-02-10 14:14:00      4        0         0      7026 WXPO…
+#&gt;  3  7.03e8 2017-02-10 14:19:00      4        0         0      7026 WXPO…
+#&gt;  4  7.03e8 2017-02-10 14:24:00      4        0         0      7026 WXPO…
+#&gt;  5  7.03e8 2017-02-10 14:29:00      4        0         0      7026 WXPO…
+#&gt;  6  7.03e8 2017-02-10 14:34:00      4        0         0      7026 WXPO…
+#&gt;  7  7.03e8 2017-02-10 14:39:00      4        0         0      7026 WXPO…
+#&gt;  8  7.03e8 2017-02-10 14:44:00      4        0         0      7026 WXPO…
+#&gt;  9  7.03e8 2017-02-10 14:49:00      4        0         0      7026 WXPO…
+#&gt; 10  7.03e8 2017-02-10 14:54:00      4        0         0      7026 WXPO…
+#&gt; # … with 6,833 more rows, and 61 more variables: report_type &lt;chr&gt;,
+#&gt; #   call_sign &lt;int&gt;, quality_control &lt;chr&gt;, wnd &lt;chr&gt;, cig &lt;chr&gt;, vis &lt;chr&gt;,
+#&gt; #   tmp &lt;chr&gt;, dew &lt;chr&gt;, slp &lt;chr&gt;, wind_direction &lt;chr&gt;,
+#&gt; #   wind_direction_quality &lt;chr&gt;, wind_code &lt;chr&gt;, wind_speed &lt;chr&gt;,
+#&gt; #   wind_speed_quality &lt;chr&gt;, ceiling_height &lt;chr&gt;,
+#&gt; #   ceiling_height_quality &lt;chr&gt;, ceiling_height_determination &lt;chr&gt;,
+#&gt; #   ceiling_height_cavok &lt;chr&gt;, visibility_distance &lt;chr&gt;,
+#&gt; #   visibility_distance_quality &lt;chr&gt;, visibility_code &lt;chr&gt;,
+#&gt; #   visibility_code_quality &lt;chr&gt;, temperature &lt;chr&gt;,
+#&gt; #   temperature_quality &lt;chr&gt;, temperature_dewpoint &lt;chr&gt;,
+#&gt; #   temperature_dewpoint_quality &lt;chr&gt;, air_pressure &lt;chr&gt;,
+#&gt; #   air_pressure_quality &lt;chr&gt;, automated_atmospheric_condition_code &lt;chr&gt;,
+#&gt; #   quality_automated_atmospheric_condition_code &lt;chr&gt;, coverage_code &lt;chr&gt;,
+#&gt; #   coverage_quality_code &lt;chr&gt;, base_height_dimension &lt;chr&gt;,
+#&gt; #   base_height_quality_code &lt;chr&gt;, cloud_type_code &lt;chr&gt;,
+#&gt; #   cloud_type_quality_code &lt;chr&gt;, connective_cloud_attribute &lt;chr&gt;,
+#&gt; #   vertical_datum_attribute &lt;chr&gt;, base_height_upper_range_attribute &lt;chr&gt;,
+#&gt; #   base_height_lower_range_attribute &lt;chr&gt;, coverage &lt;chr&gt;,
+#&gt; #   opaque_coverage &lt;chr&gt;, coverage_quality &lt;chr&gt;, lowest_cover &lt;chr&gt;,
+#&gt; #   lowest_cover_quality &lt;chr&gt;, low_cloud_genus &lt;chr&gt;,
+#&gt; #   low_cloud_genus_quality &lt;chr&gt;, lowest_cloud_base_height &lt;chr&gt;,
+#&gt; #   lowest_cloud_base_height_quality &lt;chr&gt;, mid_cloud_genus &lt;chr&gt;,
+#&gt; #   mid_cloud_genus_quality &lt;chr&gt;, high_cloud_genus &lt;chr&gt;,
+#&gt; #   high_cloud_genus_quality &lt;chr&gt;, altimeter_setting_rate &lt;chr&gt;,
+#&gt; #   altimeter_quality_code &lt;chr&gt;, station_pressure_rate &lt;chr&gt;,
+#&gt; #   station_pressure_quality_code &lt;chr&gt;, speed_rate &lt;chr&gt;, quality_code &lt;chr&gt;,
+#&gt; #   rem &lt;chr&gt;, eqd &lt;chr&gt;</code></pre>
+<p>Download a file first:</p>
+<pre class="r"><code>path &lt;- file.path(tempdir(), &quot;00702699999.csv&quot;)
+x &lt;- &quot;https://www.ncei.noaa.gov/data/global-hourly/access/2017/00702699999.csv&quot;
+download.file(x, path)
+isd_parse_csv(path)
+#&gt; # A tibble: 6,843 x 68
+#&gt;    station date                source latitude longitude elevation name 
+#&gt;      &lt;int&gt; &lt;dttm&gt;               &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;
+#&gt;  1  7.03e8 2017-02-10 14:04:00      4        0         0      7026 WXPO…
+#&gt;  2  7.03e8 2017-02-10 14:14:00      4        0         0      7026 WXPO…
+#&gt;  3  7.03e8 2017-02-10 14:19:00      4        0         0      7026 WXPO…
+#&gt;  4  7.03e8 2017-02-10 14:24:00      4        0         0      7026 WXPO…
+#&gt;  5  7.03e8 2017-02-10 14:29:00      4        0         0      7026 WXPO…
+#&gt;  6  7.03e8 2017-02-10 14:34:00      4        0         0      7026 WXPO…
+#&gt;  7  7.03e8 2017-02-10 14:39:00      4        0         0      7026 WXPO…
+#&gt;  8  7.03e8 2017-02-10 14:44:00      4        0         0      7026 WXPO…
+#&gt;  9  7.03e8 2017-02-10 14:49:00      4        0         0      7026 WXPO…
+#&gt; 10  7.03e8 2017-02-10 14:54:00      4        0         0      7026 WXPO…
+#&gt; # … with 6,833 more rows, and 61 more variables: report_type &lt;chr&gt;,
+#&gt; #   call_sign &lt;int&gt;, quality_control &lt;chr&gt;, wnd &lt;chr&gt;, cig &lt;chr&gt;, vis &lt;chr&gt;,
+#&gt; #   tmp &lt;chr&gt;, dew &lt;chr&gt;, slp &lt;chr&gt;, wind_direction &lt;chr&gt;,
+#&gt; #   wind_direction_quality &lt;chr&gt;, wind_code &lt;chr&gt;, wind_speed &lt;chr&gt;,
+#&gt; #   wind_speed_quality &lt;chr&gt;, ceiling_height &lt;chr&gt;,
+#&gt; #   ceiling_height_quality &lt;chr&gt;, ceiling_height_determination &lt;chr&gt;,
+#&gt; #   ceiling_height_cavok &lt;chr&gt;, visibility_distance &lt;chr&gt;,
+#&gt; #   visibility_distance_quality &lt;chr&gt;, visibility_code &lt;chr&gt;,
+#&gt; #   visibility_code_quality &lt;chr&gt;, temperature &lt;chr&gt;,
+#&gt; #   temperature_quality &lt;chr&gt;, temperature_dewpoint &lt;chr&gt;,
+#&gt; #   temperature_dewpoint_quality &lt;chr&gt;, air_pressure &lt;chr&gt;,
+#&gt; #   air_pressure_quality &lt;chr&gt;, automated_atmospheric_condition_code &lt;chr&gt;,
+#&gt; #   quality_automated_atmospheric_condition_code &lt;chr&gt;, coverage_code &lt;chr&gt;,
+#&gt; #   coverage_quality_code &lt;chr&gt;, base_height_dimension &lt;chr&gt;,
+#&gt; #   base_height_quality_code &lt;chr&gt;, cloud_type_code &lt;chr&gt;,
+#&gt; #   cloud_type_quality_code &lt;chr&gt;, connective_cloud_attribute &lt;chr&gt;,
+#&gt; #   vertical_datum_attribute &lt;chr&gt;, base_height_upper_range_attribute &lt;chr&gt;,
+#&gt; #   base_height_lower_range_attribute &lt;chr&gt;, coverage &lt;chr&gt;,
+#&gt; #   opaque_coverage &lt;chr&gt;, coverage_quality &lt;chr&gt;, lowest_cover &lt;chr&gt;,
+#&gt; #   lowest_cover_quality &lt;chr&gt;, low_cloud_genus &lt;chr&gt;,
+#&gt; #   low_cloud_genus_quality &lt;chr&gt;, lowest_cloud_base_height &lt;chr&gt;,
+#&gt; #   lowest_cloud_base_height_quality &lt;chr&gt;, mid_cloud_genus &lt;chr&gt;,
+#&gt; #   mid_cloud_genus_quality &lt;chr&gt;, high_cloud_genus &lt;chr&gt;,
+#&gt; #   high_cloud_genus_quality &lt;chr&gt;, altimeter_setting_rate &lt;chr&gt;,
+#&gt; #   altimeter_quality_code &lt;chr&gt;, station_pressure_rate &lt;chr&gt;,
+#&gt; #   station_pressure_quality_code &lt;chr&gt;, speed_rate &lt;chr&gt;, quality_code &lt;chr&gt;,
+#&gt; #   rem &lt;chr&gt;, eqd &lt;chr&gt;</code></pre>
+</div>
+<div id="isd_parse_line-parse-lines-from-an-ascii-strings-file" class="section level2">
+<h2>isd_parse_line: parse lines from an ASCII strings file</h2>
 <pre class="r"><code>path &lt;- system.file(&#39;extdata/024130-99999-2016.gz&#39;, package = &quot;isdparser&quot;)
 lns &lt;- readLines(path, encoding = &quot;latin1&quot;)
 isd_parse_line(lns[1])
 #&gt; # A tibble: 1 x 38
-#&gt;   total_chars usaf_station wban_station date  time  date_flag latitude
-#&gt;   &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;   
-#&gt; 1 0054        024130       99999        2016… 0000  4         +60750  
-#&gt; # ... with 31 more variables: longitude &lt;chr&gt;, type_code &lt;chr&gt;,
-#&gt; #   elevation &lt;chr&gt;, call_letter &lt;chr&gt;, quality &lt;chr&gt;,
-#&gt; #   wind_direction &lt;chr&gt;, wind_direction_quality &lt;chr&gt;, wind_code &lt;chr&gt;,
-#&gt; #   wind_speed &lt;chr&gt;, wind_speed_quality &lt;chr&gt;, ceiling_height &lt;chr&gt;,
+#&gt;   total_chars usaf_station wban_station date  time  date_flag latitude longitude
+#&gt;   &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    
+#&gt; 1 0054        024130       99999        2016… 0000  4         +60750   +012767  
+#&gt; # … with 30 more variables: type_code &lt;chr&gt;, elevation &lt;chr&gt;,
+#&gt; #   call_letter &lt;chr&gt;, quality &lt;chr&gt;, wind_direction &lt;chr&gt;,
+#&gt; #   wind_direction_quality &lt;chr&gt;, wind_code &lt;chr&gt;, wind_speed &lt;chr&gt;,
+#&gt; #   wind_speed_quality &lt;chr&gt;, ceiling_height &lt;chr&gt;,
 #&gt; #   ceiling_height_quality &lt;chr&gt;, ceiling_height_determination &lt;chr&gt;,
 #&gt; #   ceiling_height_cavok &lt;chr&gt;, visibility_distance &lt;chr&gt;,
 #&gt; #   visibility_distance_quality &lt;chr&gt;, visibility_code &lt;chr&gt;,
@@ -1521,9 +1650,8 @@ isd_parse_line(lns[1])
 #&gt; #   air_pressure_quality &lt;chr&gt;,
 #&gt; #   AW1_present_weather_observation_identifier &lt;chr&gt;,
 #&gt; #   AW1_automated_atmospheric_condition_code &lt;chr&gt;,
-#&gt; #   AW1_quality_automated_atmospheric_condition_code &lt;chr&gt;,
-#&gt; #   REM_remarks &lt;chr&gt;, REM_identifier &lt;chr&gt;, REM_length_quantity &lt;chr&gt;,
-#&gt; #   REM_comment &lt;chr&gt;</code></pre>
+#&gt; #   AW1_quality_automated_atmospheric_condition_code &lt;chr&gt;, REM_remarks &lt;chr&gt;,
+#&gt; #   REM_identifier &lt;chr&gt;, REM_length_quantity &lt;chr&gt;, REM_comment &lt;chr&gt;</code></pre>
 <p>Or, give back a list</p>
 <pre class="r"><code>head(
   isd_parse_line(lns[1], as_data_frame = FALSE)
@@ -1548,13 +1676,13 @@ isd_parse_line(lns[1])
 <p>Optionally don’t include “Additional” and “Remarks” sections in parsed output.</p>
 <pre class="r"><code>isd_parse_line(lns[1], additional = FALSE)
 #&gt; # A tibble: 1 x 31
-#&gt;   total_chars usaf_station wban_station date  time  date_flag latitude
-#&gt;   &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;   
-#&gt; 1 0054        024130       99999        2016… 0000  4         +60750  
-#&gt; # ... with 24 more variables: longitude &lt;chr&gt;, type_code &lt;chr&gt;,
-#&gt; #   elevation &lt;chr&gt;, call_letter &lt;chr&gt;, quality &lt;chr&gt;,
-#&gt; #   wind_direction &lt;chr&gt;, wind_direction_quality &lt;chr&gt;, wind_code &lt;chr&gt;,
-#&gt; #   wind_speed &lt;chr&gt;, wind_speed_quality &lt;chr&gt;, ceiling_height &lt;chr&gt;,
+#&gt;   total_chars usaf_station wban_station date  time  date_flag latitude longitude
+#&gt;   &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;    
+#&gt; 1 0054        024130       99999        2016… 0000  4         +60750   +012767  
+#&gt; # … with 23 more variables: type_code &lt;chr&gt;, elevation &lt;chr&gt;,
+#&gt; #   call_letter &lt;chr&gt;, quality &lt;chr&gt;, wind_direction &lt;chr&gt;,
+#&gt; #   wind_direction_quality &lt;chr&gt;, wind_code &lt;chr&gt;, wind_speed &lt;chr&gt;,
+#&gt; #   wind_speed_quality &lt;chr&gt;, ceiling_height &lt;chr&gt;,
 #&gt; #   ceiling_height_quality &lt;chr&gt;, ceiling_height_determination &lt;chr&gt;,
 #&gt; #   ceiling_height_cavok &lt;chr&gt;, visibility_distance &lt;chr&gt;,
 #&gt; #   visibility_distance_quality &lt;chr&gt;, visibility_code &lt;chr&gt;,
@@ -1563,23 +1691,27 @@ isd_parse_line(lns[1])
 #&gt; #   temperature_dewpoint_quality &lt;chr&gt;, air_pressure &lt;chr&gt;,
 #&gt; #   air_pressure_quality &lt;chr&gt;</code></pre>
 </div>
-<div id="parse-an-isd-file" class="section level2">
-<h2>Parse an ISD file</h2>
-<pre class="r"><code>isd_parse(path)
-#&gt; # A tibble: 2,601 x 38
+<div id="isd_parse-parse-an-ascii-strings-file" class="section level2">
+<h2>isd_parse: parse an ASCII strings file</h2>
+<p>Downloading a new file</p>
+<pre class="r"><code>path &lt;- file.path(tempdir(), &quot;007026-99999-2017.gz&quot;)
+y &lt;- &quot;ftp://ftp.ncdc.noaa.gov/pub/data/noaa/2017/007026-99999-2017.gz&quot;
+download.file(y, path)
+isd_parse(path)
+#&gt; # A tibble: 6,843 x 72
 #&gt;    total_chars usaf_station wban_station date  time  date_flag latitude
 #&gt;    &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;   
-#&gt;  1 0054        024130       99999        2016… 0000  4         +60750  
-#&gt;  2 0054        024130       99999        2016… 0100  4         +60750  
-#&gt;  3 0054        024130       99999        2016… 0200  4         +60750  
-#&gt;  4 0054        024130       99999        2016… 0300  4         +60750  
-#&gt;  5 0054        024130       99999        2016… 0400  4         +60750  
-#&gt;  6 0039        024130       99999        2016… 0500  4         +60750  
-#&gt;  7 0054        024130       99999        2016… 0600  4         +60750  
-#&gt;  8 0039        024130       99999        2016… 0700  4         +60750  
-#&gt;  9 0054        024130       99999        2016… 0800  4         +60750  
-#&gt; 10 0054        024130       99999        2016… 0900  4         +60750  
-#&gt; # ... with 2,591 more rows, and 31 more variables: longitude &lt;chr&gt;,
+#&gt;  1 0157        007026       99999        2017… 1404  4         +00000  
+#&gt;  2 0157        007026       99999        2017… 1414  4         +00000  
+#&gt;  3 0157        007026       99999        2017… 1419  4         +00000  
+#&gt;  4 0157        007026       99999        2017… 1424  4         +00000  
+#&gt;  5 0157        007026       99999        2017… 1429  4         +00000  
+#&gt;  6 0144        007026       99999        2017… 1434  4         +00000  
+#&gt;  7 0157        007026       99999        2017… 1439  4         +00000  
+#&gt;  8 0157        007026       99999        2017… 1444  4         +00000  
+#&gt;  9 0172        007026       99999        2017… 1449  4         +00000  
+#&gt; 10 0157        007026       99999        2017… 1454  4         +00000  
+#&gt; # … with 6,833 more rows, and 65 more variables: longitude &lt;chr&gt;,
 #&gt; #   type_code &lt;chr&gt;, elevation &lt;chr&gt;, call_letter &lt;chr&gt;, quality &lt;chr&gt;,
 #&gt; #   wind_direction &lt;chr&gt;, wind_direction_quality &lt;chr&gt;, wind_code &lt;chr&gt;,
 #&gt; #   wind_speed &lt;chr&gt;, wind_speed_quality &lt;chr&gt;, ceiling_height &lt;chr&gt;,
@@ -1589,12 +1721,29 @@ isd_parse_line(lns[1])
 #&gt; #   visibility_code_quality &lt;chr&gt;, temperature &lt;chr&gt;,
 #&gt; #   temperature_quality &lt;chr&gt;, temperature_dewpoint &lt;chr&gt;,
 #&gt; #   temperature_dewpoint_quality &lt;chr&gt;, air_pressure &lt;chr&gt;,
-#&gt; #   air_pressure_quality &lt;chr&gt;,
+#&gt; #   air_pressure_quality &lt;chr&gt;, GF1_sky_condition &lt;chr&gt;, GF1_coverage &lt;chr&gt;,
+#&gt; #   GF1_opaque_coverage &lt;chr&gt;, GF1_coverage_quality &lt;chr&gt;,
+#&gt; #   GF1_lowest_cover &lt;chr&gt;, GF1_lowest_cover_quality &lt;chr&gt;,
+#&gt; #   GF1_low_cloud_genus &lt;chr&gt;, GF1_low_cloud_genus_quality &lt;chr&gt;,
+#&gt; #   GF1_lowest_cloud_base_height &lt;chr&gt;,
+#&gt; #   GF1_lowest_cloud_base_height_quality &lt;chr&gt;, GF1_mid_cloud_genus &lt;chr&gt;,
+#&gt; #   GF1_mid_cloud_genus_quality &lt;chr&gt;, GF1_high_cloud_genus &lt;chr&gt;,
+#&gt; #   GF1_high_cloud_genus_quality &lt;chr&gt;, MA1_atmospheric_pressure &lt;chr&gt;,
+#&gt; #   MA1_altimeter_setting_rate &lt;chr&gt;, MA1_altimeter_quality_code &lt;chr&gt;,
+#&gt; #   MA1_station_pressure_rate &lt;chr&gt;, MA1_station_pressure_quality_code &lt;chr&gt;,
+#&gt; #   REM_remarks &lt;chr&gt;, REM_identifier &lt;chr&gt;, REM_length_quantity &lt;chr&gt;,
+#&gt; #   REM_comment &lt;chr&gt;, OC1_wind_gust_observation_identifier &lt;chr&gt;,
+#&gt; #   OC1_speed_rate &lt;chr&gt;, OC1_quality_code &lt;chr&gt;,
+#&gt; #   GA1_sky_cover_layer_identifier &lt;chr&gt;, GA1_coverage_code &lt;chr&gt;,
+#&gt; #   GA1_coverage_quality_code &lt;chr&gt;, GA1_base_height_dimension &lt;chr&gt;,
+#&gt; #   GA1_base_height_quality_code &lt;chr&gt;, GA1_cloud_type_code &lt;chr&gt;,
+#&gt; #   GA1_cloud_type_quality_code &lt;chr&gt;, GE1_sky_condition &lt;chr&gt;,
+#&gt; #   GE1_connective_cloud_attribute &lt;chr&gt;, GE1_vertical_datum_attribute &lt;chr&gt;,
+#&gt; #   GE1_base_height_upper_range_attribute &lt;chr&gt;,
+#&gt; #   GE1_base_height_lower_range_attribute &lt;chr&gt;,
 #&gt; #   AW1_present_weather_observation_identifier &lt;chr&gt;,
 #&gt; #   AW1_automated_atmospheric_condition_code &lt;chr&gt;,
-#&gt; #   AW1_quality_automated_atmospheric_condition_code &lt;chr&gt;,
-#&gt; #   REM_remarks &lt;chr&gt;, REM_identifier &lt;chr&gt;, REM_length_quantity &lt;chr&gt;,
-#&gt; #   REM_comment &lt;chr&gt;</code></pre>
+#&gt; #   AW1_quality_automated_atmospheric_condition_code &lt;chr&gt;</code></pre>
 <div id="parallel" class="section level3">
 <h3>Parallel</h3>
 <pre class="r"><code>isd_parse(path, parallel = TRUE)</code></pre>
@@ -1636,20 +1785,20 @@ isd_parse_line(lns[1])
 <h3>Additional data</h3>
 <p>Optionally don’t include “Additional” and “Remarks” sections in parsed output.</p>
 <pre class="r"><code>isd_parse(path, additional = FALSE)
-#&gt; # A tibble: 2,601 x 31
+#&gt; # A tibble: 6,843 x 31
 #&gt;    total_chars usaf_station wban_station date  time  date_flag latitude
 #&gt;    &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;   
-#&gt;  1 0054        024130       99999        2016… 0000  4         +60750  
-#&gt;  2 0054        024130       99999        2016… 0100  4         +60750  
-#&gt;  3 0054        024130       99999        2016… 0200  4         +60750  
-#&gt;  4 0054        024130       99999        2016… 0300  4         +60750  
-#&gt;  5 0054        024130       99999        2016… 0400  4         +60750  
-#&gt;  6 0039        024130       99999        2016… 0500  4         +60750  
-#&gt;  7 0054        024130       99999        2016… 0600  4         +60750  
-#&gt;  8 0039        024130       99999        2016… 0700  4         +60750  
-#&gt;  9 0054        024130       99999        2016… 0800  4         +60750  
-#&gt; 10 0054        024130       99999        2016… 0900  4         +60750  
-#&gt; # ... with 2,591 more rows, and 24 more variables: longitude &lt;chr&gt;,
+#&gt;  1 0157        007026       99999        2017… 1404  4         +00000  
+#&gt;  2 0157        007026       99999        2017… 1414  4         +00000  
+#&gt;  3 0157        007026       99999        2017… 1419  4         +00000  
+#&gt;  4 0157        007026       99999        2017… 1424  4         +00000  
+#&gt;  5 0157        007026       99999        2017… 1429  4         +00000  
+#&gt;  6 0144        007026       99999        2017… 1434  4         +00000  
+#&gt;  7 0157        007026       99999        2017… 1439  4         +00000  
+#&gt;  8 0157        007026       99999        2017… 1444  4         +00000  
+#&gt;  9 0172        007026       99999        2017… 1449  4         +00000  
+#&gt; 10 0157        007026       99999        2017… 1454  4         +00000  
+#&gt; # … with 6,833 more rows, and 24 more variables: longitude &lt;chr&gt;,
 #&gt; #   type_code &lt;chr&gt;, elevation &lt;chr&gt;, call_letter &lt;chr&gt;, quality &lt;chr&gt;,
 #&gt; #   wind_direction &lt;chr&gt;, wind_direction_quality &lt;chr&gt;, wind_code &lt;chr&gt;,
 #&gt; #   wind_speed &lt;chr&gt;, wind_speed_quality &lt;chr&gt;, ceiling_height &lt;chr&gt;,
@@ -1660,7 +1809,6 @@ isd_parse_line(lns[1])
 #&gt; #   temperature_quality &lt;chr&gt;, temperature_dewpoint &lt;chr&gt;,
 #&gt; #   temperature_dewpoint_quality &lt;chr&gt;, air_pressure &lt;chr&gt;,
 #&gt; #   air_pressure_quality &lt;chr&gt;</code></pre>
-</div>
 </div>
 </div>
 
@@ -1682,6 +1830,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
